@@ -1,0 +1,359 @@
+================================================================================
+  AI MARKET PRODUCT TREND ASSISTANT
+  Step-by-Step Development Process
+================================================================================
+
+PROJECT OVERVIEW
+----------------
+A full-stack web application that helps business executives and analysts:
+  1. Explore and filter 10 AI market trends with rich data
+  2. Chat with an AI assistant for market intelligence queries
+  3. Generate executive-ready proposal decks (8 slides with speaker notes)
+
+Stack:
+  Backend  → Node.js + Express (port 5000)
+  Frontend → React 18 + Vite (port 3000)
+  Charts   → Recharts
+  Icons    → Lucide React
+
+================================================================================
+PHASE 1 — BACKEND SETUP
+================================================================================
+
+STEP 1: Create the server directory structure
+---------------------------------------------
+  ai-trend-assistant/
+    server/
+      data/
+        marketData.js     ← All market data, AI knowledge base
+      routes/
+        trends.js         ← GET /api/trends (list, filter, sort)
+        assistant.js      ← POST /api/assistant/chat
+        proposal.js       ← POST /api/proposal/generate
+      index.js            ← Express server entry point
+      package.json
+
+STEP 2: Define the data model (server/data/marketData.js)
+----------------------------------------------------------
+  TRENDS array — 10 AI trends, each containing:
+    - id, name, category, sector
+    - trendScore (0–100)
+    - growthRate, marketSize, projectedSize, cagr
+    - status (Explosive Growth / High Growth / Rising)
+    - riskLevel (Low / Medium / Medium-High)
+    - adoptionStage
+    - description, keyPlayers[], useCases[]
+    - monthlyData[] — 12 months of trend score values (for charts)
+    - tags[]
+
+  MARKET_OVERVIEW object — global market stats
+  AI_KNOWLEDGE_BASE object — keyword → structured response mapping
+  PROPOSAL_TEMPLATES object — slide templates for proposal generation
+
+STEP 3: Create Trends API (server/routes/trends.js)
+---------------------------------------------------
+  Endpoints:
+    GET  /api/trends           → list all trends, supports query params:
+                                   ?search=    full-text search
+                                   ?category=  filter by category
+                                   ?sector=    filter by sector
+                                   ?status=    filter by status
+                                   ?sort=      score_desc | growth_desc | market_desc | cagr_desc
+    GET  /api/trends/overview  → global AI market overview stats
+    GET  /api/trends/filters   → available filter values (categories, sectors, etc.)
+    GET  /api/trends/:id       → single trend with full detail + monthlyData
+
+  Implementation:
+    - Filter chain: apply each active filter in sequence
+    - Sort: switch on sort param, default to score_desc
+    - Return slimmed data for list, full data for single-trend detail
+
+STEP 4: Create AI Assistant API (server/routes/assistant.js)
+------------------------------------------------------------
+  Endpoint:
+    POST /api/assistant/chat   → body: { message, sessionId }
+    GET  /api/assistant/suggestions → starter question suggestions
+
+  NLP implementation (no external LLM — pure rule-based):
+    1. detectTopic(message)  → keyword map → topic key
+    2. detectTrendQuery(message) → match against trend names and tags
+    3. buildResponse(message) → switch on detected intent:
+         - greeting     → welcome message + suggestions
+         - top trends   → sorted top-5 list
+         - fastest      → sorted by growth rate
+         - overview     → global market stats
+         - trend match  → full trend detail + players + use cases
+         - topic match  → knowledge base article + recommendation
+         - risk         → low-risk trend list
+         - compare      → side-by-side comparison table
+         - proposal/rec → strategic recommendation
+         - fallback     → suggestion chips
+
+  Response format:
+    { type, message, items?, data?, trend?, keyPoints?, recommendation?, suggestions[] }
+
+STEP 5: Create Proposal Generator API (server/routes/proposal.js)
+-----------------------------------------------------------------
+  Endpoints:
+    POST /api/proposal/generate      → body: { clientName, problemStatement,
+                                              selectedTrends[], proposalType,
+                                              budgetRange, timeline }
+    GET  /api/proposal/:id           → retrieve stored proposal by UUID
+    GET  /api/proposal/templates/list → available proposal templates
+
+  buildProposalContent() generates 8 slides:
+    Slide 1 — Title (client name, market opportunity headline)
+    Slide 2 — The Business Problem (pain points, statistics)
+    Slide 3 — Market Opportunity (market sizing, focus areas)
+    Slide 4 — Proposed Solution (4-pillar architecture)
+    Slide 5 — Business Value & ROI (4 ROI metrics, payback period)
+    Slide 6 — Implementation Roadmap (4 phases with milestones)
+    Slide 7 — Why Act Now (urgency + competitive window)
+    Slide 8 — Investment & Next Steps (budget breakdown, CTA)
+
+  Each slide includes:
+    - content object (structured data for rendering)
+    - speakerNotes string (executive presentation coaching)
+
+  Proposals stored in-memory Map, returned with UUID
+
+STEP 6: Assemble Express server (server/index.js)
+-------------------------------------------------
+  - cors() middleware (origin: "*")
+  - express.json() middleware
+  - Mount routers at /api/trends, /api/assistant, /api/proposal
+  - GET /api/health → server info + endpoint list
+  - 404 and global error handlers
+  - Listen on PORT 5000
+
+STEP 7: Install backend dependencies
+-------------------------------------
+  cd server
+  npm install
+  Dependencies: express, cors, uuid
+
+================================================================================
+PHASE 2 — FRONTEND SETUP
+================================================================================
+
+STEP 8: Scaffold React app with Vite
+-------------------------------------
+  npm create vite@latest client -- --template react
+  cd client && npm install
+  npm install recharts lucide-react
+
+STEP 9: Configure Vite proxy (client/vite.config.js)
+-----------------------------------------------------
+  server.proxy: '/api' → 'http://localhost:5000'
+  This allows the frontend to call /api/* without CORS issues in dev
+
+STEP 10: Set up global styles (src/index.css)
+---------------------------------------------
+  CSS custom properties (variables):
+    --primary: #3B82F6
+    --secondary: #8B5CF6
+    --bg: #0F172A          ← deep navy dark background
+    --bg-card: #1E293B     ← card surfaces
+    --bg-hover: #334155
+    --text, --text-dim, --text-muted, --border, --radius
+  Dark theme, Inter font, custom scrollbar
+
+STEP 11: Create utility files
+------------------------------
+  src/utils/api.js
+    - apiFetch() wrapper with base URL
+    - api.getTrends(params), api.getTrendById(id), api.getMarketOverview()
+    - api.chat(message, sessionId)
+    - api.generateProposal(payload), api.getProposal(id)
+
+  src/utils/formatters.js
+    - formatBillion(val) → "$66.6B"
+    - formatPercent(val) → "79.8%"
+    - statusColor(status) → hex color
+    - riskColor(risk) → hex color
+    - truncate(str, max) → "text..."
+
+  src/hooks/useApi.js
+    - Custom React hook: useApi(apiCallFn, deps)
+    - Returns { data, loading, error }
+
+================================================================================
+PHASE 3 — COMPONENT DEVELOPMENT
+================================================================================
+
+STEP 12: Navbar component (src/components/Navbar.jsx)
+-----------------------------------------------------
+  - Brand logo + title
+  - Three navigation tabs: Dashboard | AI Assistant | Proposal Generator
+  - Active tab state managed in App.jsx, passed as prop
+  - Responsive: collapses on mobile
+
+STEP 13: TrendCard component (src/components/TrendCard.jsx)
+-----------------------------------------------------------
+  - Gradient accent bar on hover
+  - Score badge with dynamic gradient color
+  - Status badge with color-matched background
+  - 3-metric grid: Market Size | Projected | CAGR
+  - Tags, risk badge, category footer
+  - "View Details" reveals on hover
+
+STEP 14: TrendDetailModal (src/components/TrendDetailModal.jsx)
+---------------------------------------------------------------
+  - Full-screen overlay with backdrop blur
+  - 6-stat header row
+  - Recharts LineChart for 12-month trend score
+  - Key players as purple chips
+  - Use cases as numbered list
+  - Tags as green pills
+  - Click outside to close
+
+================================================================================
+PHASE 4 — PAGE DEVELOPMENT
+================================================================================
+
+STEP 15: Dashboard page (src/pages/Dashboard.jsx)
+-------------------------------------------------
+  State:
+    - trends[] — loaded on mount and on filter change
+    - activeFilters: { category, sector, status, sort }
+    - searchTerm — debounced via useEffect dependency
+    - selectedTrend — drives modal open/close
+
+  UI sections:
+    1. Overview Cards row (4 cards: market size, projected, CAGR, count)
+    2. Search bar + Filter toggle + Sort select
+    3. Collapsible Filter Panel (category, sector, status dropdowns + Reset)
+    4. Results count line
+    5. Responsive grid of TrendCards (minmax 340px)
+    6. TrendDetailModal (conditional)
+
+  Data flow:
+    useEffect([activeFilters, searchTerm]) → fetchTrends() → api.getTrends(params)
+
+STEP 16: AI Assistant page (src/pages/Assistant.jsx)
+----------------------------------------------------
+  Two-column layout:
+    Left sidebar (280px): Suggested query buttons
+    Right: Chat window
+
+  Chat architecture:
+    - messages[] array: each item { id, type:"user"|"assistant", content, timestamp }
+    - WELCOME_MESSAGE injected as initial state
+    - sendMessage(text) → api.chat() → append response to messages
+    - MessageBubble component renders content based on response.type:
+        "greeting"     → text + suggestion chips
+        "overview"     → 6-stat grid
+        "trends"       → ranked list with metadata
+        "trend_detail" → full trend card with stats, players, use cases
+        "knowledge"    → summary + key-points list + recommendation box
+        "risk"         → low-risk trend list
+        "comparison"   → side-by-side table
+        "recommendation" → steps list
+        "fallback"     → suggestion chips only
+    - Typing indicator (spinner) while loading
+    - Auto-scroll to bottom via bottomRef
+    - Enter to send, Shift+Enter for newline
+    - Clear Chat button resets to WELCOME_MESSAGE
+
+STEP 17: Proposal Generator page (src/pages/ProposalGenerator.jsx)
+------------------------------------------------------------------
+  4-step wizard:
+
+  STEP 1 — Client Information
+    - clientName input (required for validation)
+    - problemStatement textarea (optional)
+
+  STEP 2 — Select Trends
+    - Grid of all trends as selectable cards
+    - Click to toggle selection (border highlights, checkmark)
+    - Selection count badge
+    - Requires ≥1 selection to proceed
+
+  STEP 3 — Configuration
+    - proposalType select (ai-transformation | trend-briefing)
+    - budgetRange select ($100K–$500K / $500K–$2M / $2M–$5M / $5M+)
+    - timeline select (3–12+ months)
+    - "Generate Proposal" button → POST /api/proposal/generate
+
+  STEP 4 — Generated Proposal
+    - Success banner with slide count
+    - Summary bar: 5 key metrics (market opportunity, ROI, budget, etc.)
+    - 8-slide grid — each card shows title, type badge, "View Details" button
+    - Slide Detail Modal: raw content JSON + speaker notes
+    - Export as JSON button
+    - "New Proposal" button to restart
+
+================================================================================
+PHASE 5 — INTEGRATION & POLISH
+================================================================================
+
+STEP 18: Update App.jsx
+-----------------------
+  - activeTab state (dashboard | assistant | proposal)
+  - Passes activeTab and setActiveTab to Navbar
+  - Renders matching page component
+
+STEP 19: Build verification
+----------------------------
+  Backend check:
+    node server/index.js
+    curl http://localhost:5000/api/health
+
+  Frontend build check:
+    cd client && npm run build
+    (verify 0 errors)
+
+  Runtime checks:
+    - Dashboard loads 10 trends
+    - Search "cyber" → filters to AI Cybersecurity
+    - Click trend card → modal opens with chart
+    - AI Assistant: "What are the top AI trends?" → ranked list
+    - AI Assistant: "Tell me about generative AI" → full detail card
+    - Proposal Generator: fill form → generate → 8 slides rendered
+    - Export JSON button downloads file
+
+================================================================================
+PROJECT FILE TREE (final)
+================================================================================
+
+ai-trend-assistant/
+├── package.json                          ← root scripts
+├── PROCESS.txt                           ← this file
+├── GETTING_STARTED.txt                   ← quick-start guide
+│
+├── server/
+│   ├── package.json
+│   ├── index.js                          ← Express entry point
+│   ├── data/
+│   │   └── marketData.js                 ← 10 trends + knowledge base
+│   └── routes/
+│       ├── trends.js                     ← /api/trends/*
+│       ├── assistant.js                  ← /api/assistant/*
+│       └── proposal.js                   ← /api/proposal/*
+│
+└── client/
+    ├── package.json
+    ├── vite.config.js
+    ├── index.html
+    └── src/
+        ├── main.jsx
+        ├── App.jsx
+        ├── App.css
+        ├── index.css                     ← global styles + CSS vars
+        ├── utils/
+        │   ├── api.js                    ← fetch wrapper
+        │   └── formatters.js             ← display helpers
+        ├── hooks/
+        │   └── useApi.js                 ← data-fetching hook
+        ├── components/
+        │   ├── Navbar.jsx / .css
+        │   ├── TrendCard.jsx / .css
+        │   └── TrendDetailModal.jsx / .css
+        └── pages/
+            ├── Dashboard.jsx / .css
+            ├── Assistant.jsx / .css
+            └── ProposalGenerator.jsx / .css
+
+================================================================================
+END OF PROCESS DOCUMENT
+================================================================================

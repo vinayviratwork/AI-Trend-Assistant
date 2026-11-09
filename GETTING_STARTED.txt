@@ -1,0 +1,366 @@
+================================================================================
+  AI MARKET PRODUCT TREND ASSISTANT
+  Getting Started Guide
+================================================================================
+
+WHAT IS THIS APPLICATION?
+--------------------------
+The AI Market Product Trend Assistant is a full-stack executive intelligence
+platform that helps business analysts, strategy teams, and executives:
+
+  • Explore 10 high-signal AI market trends with live filtering and charts
+  • Query an AI assistant for market insights, comparisons, and investment advice
+  • Generate 8-slide executive proposal decks with speaker notes in minutes
+
+================================================================================
+PRE-REQUISITES
+================================================================================
+
+Before you begin, make sure you have these installed:
+
+  Node.js   v18 or higher   https://nodejs.org
+  npm       v9 or higher    (bundled with Node.js)
+
+Check your versions:
+  node --version
+  npm --version
+
+================================================================================
+QUICK START (2 terminals)
+================================================================================
+
+The app requires two processes running simultaneously:
+  - Terminal 1: Backend server (Express, port 5000)
+  - Terminal 2: Frontend dev server (Vite/React, port 3000)
+
+------------------------------------------------------------------------
+TERMINAL 1 — Start the backend
+------------------------------------------------------------------------
+
+  cd ai-trend-assistant/server
+  npm install          (first time only — takes ~10 seconds)
+  node index.js
+
+  You should see:
+  ╔══════════════════════════════════════════════════════╗
+  ║   AI Market Product Trend Assistant — Backend API    ║
+  ║   Server running at: http://localhost:5000           ║
+  ╚══════════════════════════════════════════════════════╝
+
+  Verify it's working:
+  Open browser → http://localhost:5000/api/health
+  Expected: JSON with status "ok" and endpoint list
+
+------------------------------------------------------------------------
+TERMINAL 2 — Start the frontend
+------------------------------------------------------------------------
+
+  cd ai-trend-assistant/client
+  npm install          (first time only — takes ~15 seconds)
+  npm run dev
+
+  You should see:
+    VITE  ready in ~500ms
+    ➜  Local:   http://localhost:3000/
+
+  Open your browser → http://localhost:3000
+
+================================================================================
+USING THE APPLICATION
+================================================================================
+
+The app has three sections accessible from the top navigation bar:
+
+--------------------------------------------------------------------------------
+1. DASHBOARD  (default view)
+--------------------------------------------------------------------------------
+
+PURPOSE: Explore and analyze AI market trends with rich data visualizations.
+
+HOW TO USE:
+  a) Overview Cards (top row)
+     • Shows global AI market size ($279B in 2024), projected size ($1.8T in
+       2030), overall CAGR (36.6%), and number of trends tracked
+
+  b) Search Bar
+     • Type any keyword: "cyber", "healthcare", "RAG", "agents", etc.
+     • Search runs across trend names, descriptions, tags, and sectors
+
+  c) Sort Dropdown (top right)
+     • Sort by: Trend Score, Growth Rate, Market Size, or CAGR
+
+  d) Filters Button
+     • Click "Filters" to open the filter panel
+     • Filter by: Category | Sector | Status
+     • Click "Reset Filters" to clear all active filters
+
+  e) Trend Cards
+     • Each card shows the trend score badge, status, market data, and tags
+     • Hover over a card to highlight it
+     • Click any card to open the Detail Modal
+
+  f) Trend Detail Modal
+     • 6 key metrics across the top
+     • Interactive line chart (trend score across 12 months)
+     • Key players, top use cases, tags
+     • Click anywhere outside the modal (or X) to close
+
+EXAMPLE WORKFLOW:
+  1. Open Dashboard
+  2. Sort by "CAGR ↓" to find the fastest-growing opportunities
+  3. Click "Generative AI" card to see full detail + chart
+  4. Filter by Category = "Industry Application" to see vertical trends
+
+--------------------------------------------------------------------------------
+2. AI ASSISTANT  (click "AI Assistant" in navbar)
+--------------------------------------------------------------------------------
+
+PURPOSE: Conversational AI interface for market intelligence queries.
+         No LLM subscription needed — powered by a structured knowledge base.
+
+HOW TO USE:
+  a) Type a question in the chat box (bottom) and press Enter
+  b) Or click any suggested query in the left sidebar
+  c) The assistant responds with structured, data-rich answers
+  d) Click blue suggestion chips in responses to continue the conversation
+  e) "Clear Chat" button resets the session
+
+WHAT YOU CAN ASK:
+  Trend Discovery:
+    "What are the top AI trends right now?"
+    "Which AI trends are in explosive growth?"
+    "Show me the fastest growing AI sectors"
+    "What are the AI trends in healthcare?"
+
+  Market Intelligence:
+    "Show me the global AI market overview"
+    "What is the market size for Generative AI?"
+    "How big is the AI cybersecurity market?"
+    "Tell me about Vector Databases and RAG"
+
+  Investment & Strategy:
+    "What are the best low-risk AI investments?"
+    "What AI investment trends should I know about?"
+    "Compare AI technology trends"
+    "What should I recommend to my executive team?"
+
+  Specific Trends (just mention the name or tag):
+    "Tell me about Edge AI"
+    "What is agentic AI?"
+    "Explain multimodal AI"
+    "What is RAG?"
+
+  Strategic:
+    "Generate a strategic recommendation"
+    "What are the key risks in AI adoption?"
+    "Why should we invest in AI now?"
+
+RESPONSE TYPES:
+  • Ranked trend lists with scores and metrics
+  • Global market overview with 6 stat cards
+  • Full trend detail (description + players + use cases)
+  • Knowledge base articles with key points + recommendations
+  • Risk-filtered trend lists
+  • Comparison tables
+
+--------------------------------------------------------------------------------
+3. PROPOSAL GENERATOR  (click "Proposal Generator" in navbar)
+--------------------------------------------------------------------------------
+
+PURPOSE: Generate an 8-slide executive AI transformation proposal with
+         speaker notes in under 2 minutes.
+
+HOW TO USE (4-step wizard):
+
+  STEP 1 — Client Information
+    • Enter the client or organization name (required)
+    • Optionally describe the business problem being solved
+    • Click "Continue"
+
+  STEP 2 — Select AI Trends
+    • Browse all 10 trends shown as selectable cards
+    • Click a card to select it (blue border + checkmark appear)
+    • Select 1–5 trends most relevant to the client
+    • A selection count badge confirms your picks
+    • Click "Continue"
+
+  STEP 3 — Configuration
+    • Proposal Type: AI Transformation Initiative OR Trend Intelligence Briefing
+    • Budget Range: $100K–$500K / $500K–$2M / $2M–$5M / $5M+
+    • Timeline: 3 months / 6 months / 9–12 months / 12+ months
+    • Click "Generate Proposal"
+
+  STEP 4 — Generated Proposal
+    The platform generates an 8-slide executive deck:
+
+    Slide 1  Title Slide              Client name + market opportunity hook
+    Slide 2  The Business Problem     Pain points, market statistics
+    Slide 3  Market Opportunity       Market sizing from selected trends
+    Slide 4  Proposed Solution        4-pillar AI architecture
+    Slide 5  Business Value & ROI     4 ROI metrics + payback period
+    Slide 6  Implementation Roadmap   4 phases with milestones
+    Slide 7  Why Act Now              Urgency + competitive window
+    Slide 8  Investment & Next Steps  Budget breakdown + CTA
+
+    For each slide:
+      • Click "View Details" to see full slide content + speaker notes
+      • Speaker notes provide executive presentation coaching
+
+    Export:
+      • Click "Export JSON" to download the full proposal as a JSON file
+      • The JSON can be imported into tools or used to build a PPT with python-pptx
+
+    Restart:
+      • Click "New Proposal" to start over for a different client
+
+================================================================================
+API REFERENCE (for developers)
+================================================================================
+
+All endpoints are available at: http://localhost:5000
+
+TRENDS:
+  GET  /api/trends                   List all trends
+       ?search=genai                 Full-text search
+       ?category=AI Technology       Filter by category
+       ?sector=Healthcare            Filter by sector
+       ?status=Explosive Growth      Filter by status
+       ?sort=score_desc              Sort options:
+                                       score_desc, score_asc,
+                                       growth_desc, market_desc, cagr_desc
+
+  GET  /api/trends/overview          Global AI market stats
+  GET  /api/trends/filters           Available filter values
+  GET  /api/trends/t001              Single trend by ID (t001–t010)
+
+ASSISTANT:
+  POST /api/assistant/chat
+       Body: { "message": "What are the top AI trends?", "sessionId": "s1" }
+
+  GET  /api/assistant/suggestions    Returns 8 starter questions
+
+PROPOSAL:
+  POST /api/proposal/generate
+       Body: {
+         "clientName": "Acme Corp",
+         "problemStatement": "We need AI strategy",
+         "selectedTrends": ["t001", "t002"],
+         "proposalType": "ai-transformation",
+         "budgetRange": "$500K–$2M",
+         "timeline": "9–12 months"
+       }
+
+  GET  /api/proposal/:id             Retrieve a generated proposal by UUID
+  GET  /api/proposal/templates/list  Available proposal templates
+
+HEALTH:
+  GET  /api/health                   Server status + endpoint list
+
+================================================================================
+TREND IDs REFERENCE
+================================================================================
+
+  t001 — Generative AI               (Score: 98, CAGR: 79.8%)
+  t002 — AI Agents & Agentic Workflows  (Score: 94, CAGR: 44.8%)
+  t003 — AI in Healthcare            (Score: 91, CAGR: 76.4%)
+  t004 — Edge AI & TinyML            (Score: 82, CAGR: 29.5%)
+  t005 — AI-Powered Cybersecurity    (Score: 88, CAGR: 32.4%)
+  t006 — Multimodal AI               (Score: 92, CAGR: 71.5%)
+  t007 — AI in Retail & E-Commerce   (Score: 85, CAGR: 37.1%)
+  t008 — Responsible AI & Governance (Score: 80, CAGR: 41.0%)
+  t009 — AI in Financial Services    (Score: 87, CAGR: 30.6%)
+  t010 — Vector Databases & RAG      (Score: 89, CAGR: 58.7%)
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "npm install" fails
+  Solution: Make sure Node.js v18+ is installed. Run "node --version" to check.
+
+Problem: "Port 5000 already in use"
+  Solution: Stop any other process on port 5000, or change PORT in server/index.js
+  Windows: netstat -ano | findstr :5000 → taskkill /PID <PID> /F
+
+Problem: "Port 3000 already in use"
+  Solution: Vite will automatically try 3001, 3002, etc. Check terminal output
+  for the correct URL.
+
+Problem: Trends not loading on dashboard
+  Solution: Make sure the backend server is running first (Terminal 1).
+  Check http://localhost:5000/api/health in your browser.
+
+Problem: White blank page in browser
+  Solution: Open browser DevTools (F12) → Console tab. Check for errors.
+  Most common cause: backend not running or wrong port.
+
+Problem: "Cannot find module" error in server
+  Solution: Run "npm install" inside the server/ directory.
+
+Problem: Chat assistant gives "error" response
+  Solution: Verify backend is running. Check server terminal for error output.
+
+================================================================================
+FOLDER STRUCTURE REFERENCE
+================================================================================
+
+ai-trend-assistant/
+├── GETTING_STARTED.txt        ← You are here
+├── PROCESS.txt                ← Full development process documentation
+├── package.json               ← Root convenience scripts
+│
+├── server/                    ← Backend (Node.js + Express)
+│   ├── index.js               ← Server entry point (port 5000)
+│   ├── package.json           ← Backend dependencies
+│   ├── data/
+│   │   └── marketData.js      ← All AI trend data + knowledge base
+│   └── routes/
+│       ├── trends.js          ← Trend listing, filtering, detail
+│       ├── assistant.js       ← Chat AI engine
+│       └── proposal.js        ← Proposal generation engine
+│
+└── client/                    ← Frontend (React 18 + Vite)
+    ├── vite.config.js         ← Dev server config + API proxy
+    ├── index.html             ← App shell
+    └── src/
+        ├── App.jsx            ← Root component + tab routing
+        ├── index.css          ← Global CSS variables + dark theme
+        ├── utils/
+        │   ├── api.js         ← All API calls in one place
+        │   └── formatters.js  ← Number/color formatting helpers
+        ├── hooks/
+        │   └── useApi.js      ← Generic async data hook
+        ├── components/
+        │   ├── Navbar.jsx     ← Top navigation
+        │   ├── TrendCard.jsx  ← Dashboard grid card
+        │   └── TrendDetailModal.jsx  ← Click-through modal with chart
+        └── pages/
+            ├── Dashboard.jsx        ← Trend explorer with filters
+            ├── Assistant.jsx        ← AI chat interface
+            └── ProposalGenerator.jsx ← 4-step proposal wizard
+
+================================================================================
+TECHNOLOGY STACK
+================================================================================
+
+  Backend
+    Runtime:    Node.js v22
+    Framework:  Express 4.18
+    Libraries:  cors, uuid
+
+  Frontend
+    Framework:  React 18
+    Build tool: Vite 6
+    Charts:     Recharts 2
+    Icons:      Lucide React
+    Styling:    Pure CSS (custom properties, no framework)
+
+  Design System
+    Theme:      Dark navy (#0F172A background)
+    Accent:     Electric blue (#3B82F6) + violet (#8B5CF6)
+    Font:       Inter (Google Fonts)
+    Charts:     Recharts LineChart with dark tooltips
+
+================================================================================
+END OF GETTING STARTED GUIDE
+================================================================================

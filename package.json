@@ -1,0 +1,10 @@
+{
+  "name": "ai-trend-assistant",
+  "version": "1.0.0",
+  "description": "AI Market Product Trend Assistant — Full-Stack Application",
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "dev:server": "cd server && npm start",
+    "dev:client": "cd client && npm run dev"
+  }
+}
