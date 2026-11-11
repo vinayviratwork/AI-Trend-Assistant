@@ -47,11 +47,15 @@ function detectTopic(message) {
 
 function detectTrendQuery(message) {
   const lower = message.toLowerCase();
-  return TRENDS.find(
-    (t) =>
-      lower.includes(t.name.toLowerCase()) ||
-      t.tags.some((tag) => lower.includes(tag.toLowerCase()))
-  );
+  return TRENDS.find((t) => {
+    const nameLower = t.name.toLowerCase();
+    if (lower.includes(nameLower)) return true;
+    // Match compound trend names on their first segment, so e.g.
+    // "AI in Healthcare" matches "AI in Healthcare & Drug Discovery"
+    const firstSegment = nameLower.split(" & ")[0];
+    if (firstSegment !== nameLower && lower.includes(firstSegment)) return true;
+    return t.tags.some((tag) => lower.includes(tag.toLowerCase()));
+  });
 }
 
 function buildResponse(userMessage) {
@@ -105,24 +109,6 @@ function buildResponse(userMessage) {
     };
   }
 
-  if (
-    lower.includes("overview") ||
-    lower.includes("market size") ||
-    lower.includes("total market") ||
-    lower.includes("global market")
-  ) {
-    return {
-      type: "overview",
-      message: `**Global AI Market Overview (2024)**`,
-      data: MARKET_OVERVIEW,
-      suggestions: [
-        "What is the best sector to invest in AI?",
-        "Tell me about AI investment trends",
-        "Which companies are leading AI adoption?"
-      ]
-    };
-  }
-
   const matchedTrend = detectTrendQuery(userMessage);
   if (matchedTrend) {
     return {
@@ -149,18 +135,20 @@ function buildResponse(userMessage) {
     };
   }
 
-  const topic = detectTopic(userMessage);
-  if (topic && AI_KNOWLEDGE_BASE.topicResponses[topic]) {
-    const resp = AI_KNOWLEDGE_BASE.topicResponses[topic];
+  if (
+    lower.includes("overview") ||
+    lower.includes("market size") ||
+    lower.includes("total market") ||
+    lower.includes("global market")
+  ) {
     return {
-      type: "knowledge",
-      message: `**${resp.title}**\n\n${resp.summary}`,
-      keyPoints: resp.keyPoints,
-      recommendation: resp.recommendation,
+      type: "overview",
+      message: `**Global AI Market Overview (2024)**`,
+      data: MARKET_OVERVIEW,
       suggestions: [
-        "What is the market size for this?",
-        "Who are the key players?",
-        "Generate an executive proposal for this"
+        "What is the best sector to invest in AI?",
+        "Tell me about AI investment trends",
+        "Which companies are leading AI adoption?"
       ]
     };
   }
@@ -177,6 +165,22 @@ function buildResponse(userMessage) {
         status: t.status
       })),
       suggestions: ["Which trends have highest ROI?", "Tell me about AI governance risks"]
+    };
+  }
+
+  const topic = detectTopic(userMessage);
+  if (topic && AI_KNOWLEDGE_BASE.topicResponses[topic]) {
+    const resp = AI_KNOWLEDGE_BASE.topicResponses[topic];
+    return {
+      type: "knowledge",
+      message: `**${resp.title}**\n\n${resp.summary}`,
+      keyPoints: resp.keyPoints,
+      recommendation: resp.recommendation,
+      suggestions: [
+        "What is the market size for this?",
+        "Who are the key players?",
+        "Generate an executive proposal for this"
+      ]
     };
   }
 

@@ -319,7 +319,7 @@ ai-trend-assistant/
 │       ├── assistant.js       ← Chat AI engine
 │       └── proposal.js        ← Proposal generation engine
 │
-└── client/                    ← Frontend (React 18 + Vite)
+└── client/                    ← Frontend (React 19 + Vite)
     ├── vite.config.js         ← Dev server config + API proxy
     ├── index.html             ← App shell
     └── src/
@@ -349,9 +349,9 @@ TECHNOLOGY STACK
     Libraries:  cors, uuid
 
   Frontend
-    Framework:  React 18
-    Build tool: Vite 6
-    Charts:     Recharts 2
+    Framework:  React 19
+    Build tool: Vite 8
+    Charts:     Recharts 3
     Icons:      Lucide React
     Styling:    Pure CSS (custom properties, no framework)
 

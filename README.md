@@ -1,7 +1,7 @@
 # 📈 AI Market Trend Assistant
 
-![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-6-646CFF?style=flat&logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat&logo=vite&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat&logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-4.x-000000?style=flat&logo=express&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
@@ -24,7 +24,7 @@ A full-stack **executive intelligence platform** for exploring AI market trends,
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18, Vite 6, Recharts, Lucide React |
+| Frontend | React 19, Vite 8, Recharts 3, Lucide React |
 | Backend | Node.js 18+, Express 4 |
 | Styling | Pure CSS with custom properties (dark theme) |
 | Charts | Recharts LineChart |
@@ -42,7 +42,7 @@ A full-stack **executive intelligence platform** for exploring AI market trends,
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/vinayviratwork/ai-trend-assistant.git
+git clone https://github.com/vinayviratwork/AI-Trend-Assistant.git
 cd ai-trend-assistant
 
 # 2. Install all dependencies (server + client)

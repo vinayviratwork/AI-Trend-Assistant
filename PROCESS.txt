@@ -12,7 +12,7 @@ A full-stack web application that helps business executives and analysts:
 
 Stack:
   Backend  → Node.js + Express (port 5000)
-  Frontend → React 18 + Vite (port 3000)
+  Frontend → React 19 + Vite (port 3000)
   Charts   → Recharts
   Icons    → Lucide React
 
@@ -119,7 +119,7 @@ STEP 5: Create Proposal Generator API (server/routes/proposal.js)
 
 STEP 6: Assemble Express server (server/index.js)
 -------------------------------------------------
-  - cors() middleware (origin: "*")
+  - cors() middleware (origin: restricted localhost whitelist)
   - express.json() middleware
   - Mount routers at /api/trends, /api/assistant, /api/proposal
   - GET /api/health → server info + endpoint list
