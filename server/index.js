@@ -13,8 +13,10 @@ const ALLOWED_ORIGINS = [
   "http://localhost:3001",
   "http://localhost:3000",
   "http://localhost:5173",
-  "http://127.0.0.1:3001"
-];
+  "http://127.0.0.1:3001",
+  // production — Vercel frontend URL (set after deploy)
+  process.env.FRONTEND_URL,
+].filter(Boolean);
 
 app.use(cors({
   origin: (incomingOrigin, callback) => {
